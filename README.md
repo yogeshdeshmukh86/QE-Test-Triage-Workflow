@@ -16,17 +16,6 @@ This project was designed, developed, and implemented using **n8n**. n8n coordin
 
 The same automation approach could also be implemented with **Zapier, Make, or similar workflow automation platforms**, using appropriate integrations or API calls. Those implementations would require rebuilding the workflow and validating their behavior. This repository provides the n8n implementation only; its workflow JSON cannot be imported directly into those platforms.
 
-
-
-Suggested walkthrough, approximately 3–5 minutes:
-
-1. Explain the testing problem and show the n8n workflow.
-2. Submit a synthetic failure payload and inspect the extraction and classification outputs.
-3. Follow a High example to Jira, a Medium example to Slack and Airtable, and a Low example to Airtable.
-4. Show the resulting issue or record, then explain the current limitations and planned improvements.
-
-The recording should demonstrate actual destination results alongside n8n execution details. Keep credentials, tokens, private account URLs, and unrelated personal information out of view.
-
 ## Demo context and account disclosure
 
 - This is an independent portfolio demonstration using simulated test failures, not a client delivery or production deployment.
