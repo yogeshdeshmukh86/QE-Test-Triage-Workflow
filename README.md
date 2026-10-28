@@ -16,9 +16,7 @@ This project was designed, developed, and implemented using **n8n**. n8n coordin
 
 The same automation approach could also be implemented with **Zapier, Make, or similar workflow automation platforms**, using appropriate integrations or API calls. Those implementations would require rebuilding the workflow and validating their behavior. This repository provides the n8n implementation only; its workflow JSON cannot be imported directly into those platforms.
 
-## Workflow video
 
-A short walkthrough will be added here once recorded and published on YouTube or Loom.
 
 Suggested walkthrough, approximately 3–5 minutes:
 
