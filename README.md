@@ -1,6 +1,8 @@
 # Automated QE Test Failure Triage Workflow
 
-**An n8n portfolio project  applies AI-assisted triage to a real software testing problem: deciding which automated test failures need attention and where to route them.**
+![n8n](https://img.shields.io/badge/n8n-EA4B71?style=flat-square) ![OpenRouter](https://img.shields.io/badge/OpenRouter-6467F2?style=flat-square) ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?style=flat-square) ![Jira](https://img.shields.io/badge/Jira-0052CC?style=flat-square) ![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square) ![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=flat-square) ![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat-square)
+
+**An n8n workflow for AI-assisted triage of automated test failures: identifying failures that need attention and routing them to engineering tools.**
 
 ## Purpose and intent
 
@@ -8,7 +10,24 @@ Automated regression suites can produce a mixture of critical failures, function
 
 I built this project to demonstrate how n8n can orchestrate a practical Quality Engineering workflow: receive a test failure, extract technical context, suggest priority and severity with an LLM, and route the result into engineering tools. The intended benefit is faster first-pass triage and less repetitive log review. Time savings, classification accuracy, and production impact have not been measured.
 
-This repository showcases my ability to translate a testing problem into an automation design, connect APIs, use structured AI outputs, implement conditional routing, and create repeatable demonstration payloads. It is intended for technical discussion and sharing on LinkedIn.
+## Implementation and portability
+
+This project was designed, developed, and implemented using **n8n**. n8n coordinates webhook intake, AI extraction and classification, conditional routing, and integrations with Jira, Slack, and Airtable. PowerShell provides the demonstration runner.
+
+The same automation approach could also be implemented with **Zapier, Make, or similar workflow automation platforms**, using appropriate integrations or API calls. Those implementations would require rebuilding the workflow and validating their behavior. This repository provides the n8n implementation only; its workflow JSON cannot be imported directly into those platforms.
+
+## Workflow video
+
+A short walkthrough will be added here once recorded and published on YouTube or Loom.
+
+Suggested walkthrough, approximately 3–5 minutes:
+
+1. Explain the testing problem and show the n8n workflow.
+2. Submit a synthetic failure payload and inspect the extraction and classification outputs.
+3. Follow a High example to Jira, a Medium example to Slack and Airtable, and a Low example to Airtable.
+4. Show the resulting issue or record, then explain the current limitations and planned improvements.
+
+The recording should demonstrate actual destination results alongside n8n execution details. Keep credentials, tokens, private account URLs, and unrelated personal information out of view.
 
 ## Demo context and account disclosure
 
