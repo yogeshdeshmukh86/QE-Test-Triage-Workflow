@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1002",
+  "environment": "DEMO-STAGING",
+  "application": "Volta Web Storefront",
+  "test_case_id": "TC-PAYMENT-001",
+  "test_name": "Checkout_Payment_Gateway_Timeout",
+  "execution_status": "FAILED",
+  "execution_time_ms": 31200,
+  "error_type": "PaymentGatewayException",
+  "error_message": "CRITICAL: Payment gateway timed out after 30000ms during transaction authorization.",
+  "stack_trace": "PaymentGatewayException: Timeout of 30000ms exceeded during charge execution\n\tat com.volta.checkout.PaymentService.charge(PaymentService.java:142)"
+}

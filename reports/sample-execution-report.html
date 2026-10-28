@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QE Test Triage Engine Execution Report</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h1 { color: #1a2b4c; margin-bottom: 5px; font-size: 24px; }
+        p.subtitle { color: #666; font-size: 14px; margin-top: 0; margin-bottom: 25px; }
+        .summary-cards { display: flex; gap: 15px; margin-bottom: 25px; }
+        .card { flex: 1; padding: 15px; border-radius: 6px; background: #f8f9fa; border-left: 4px solid #007bff; }
+        .card h3 { margin: 0; font-size: 12px; text-transform: uppercase; color: #666; }
+        .card p { margin: 5px 0 0 0; font-size: 20px; font-weight: bold; color: #1a2b4c; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px 15px; border-bottom: 1px solid #e1e1e1; font-size: 14px; }
+        th { background-color: #f1f3f5; color: #495057; font-weight: 600; }
+        tr:hover { background-color: #f8f9fa; }
+        code { background: #e9ecef; padding: 2px 6px; border-radius: 4px; font-family: Consolas, monospace; font-size: 13px; color: #d63384; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .badge-success { background-color: #d4edda; color: #155724; }
+        .badge-danger { background-color: #f8d7da; color: #721c24; }
+        .footer { margin-top: 25px; font-size: 12px; color: #888; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ðŸš¨ QE Test Failure Triage Engine</h1>
+        <p class="subtitle">Automated Batch Execution Summary Report</p>
+        
+        <div class="summary-cards">
+            <div class="card" style="border-color: #007bff;">
+                <h3>Total Test Cases</h3>
+                <p>10</p>
+            </div>
+            <div class="card" style="border-color: #28a745;">
+                <h3>Accepted Calls</h3>
+                <p>7</p>
+            </div>
+            <div class="card" style="border-color: #dc3545;">
+                <h3>Failed Calls</h3>
+                <p>3</p>
+            </div>
+            <div class="card" style="border-color: #6c757d;">
+                <h3>Total Duration</h3>
+                <p>4m 30s</p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Test ID</th>
+                    <th>Description</th>
+                    <th>Expected Routing Path</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                        <tr>
+            <td><strong>TC-001</strong></td>
+            <td>JVM Fatal OutOfMemory Crash</td>
+            <td><code>Output 0 (Jira + Slack + Airtable)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:17:13</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-002</strong></td>
+            <td>Payment Gateway Timeout</td>
+            <td><code>Output 0 (Jira + Slack + Airtable)</code></td>
+            <td><span class="badge badge-danger">FAILED</span></td>
+            <td>2026-10-06 21:17:43</td>
+            <td>The remote server returned an error: (404) Not Found.</td>
+        </tr>        <tr>
+            <td><strong>TC-003</strong></td>
+            <td>Database Connection Pool Exhaustion</td>
+            <td><code>Output 0 (Jira + Slack + Airtable)</code></td>
+            <td><span class="badge badge-danger">FAILED</span></td>
+            <td>2026-10-06 21:18:13</td>
+            <td>The remote server returned an error: (404) Not Found.</td>
+        </tr>        <tr>
+            <td><strong>TC-004</strong></td>
+            <td>Promo Discount Calculation Error</td>
+            <td><code>Output 1 (Slack + Airtable)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:18:43</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-005</strong></td>
+            <td>Email Notification Service Failure</td>
+            <td><code>Output 1 (Slack + Airtable)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:19:13</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-006</strong></td>
+            <td>User Profile Picture Upload Size Limit</td>
+            <td><code>Output 1 (Slack + Airtable)</code></td>
+            <td><span class="badge badge-danger">FAILED</span></td>
+            <td>2026-10-06 21:19:43</td>
+            <td>The remote server returned an error: (404) Not Found.</td>
+        </tr>        <tr>
+            <td><strong>TC-007</strong></td>
+            <td>UI Alignment Assertion Failure</td>
+            <td><code>Output 2 (Airtable Only)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:20:13</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-008</strong></td>
+            <td>Flaky Network Intermittent Delay</td>
+            <td><code>Output 2 (Airtable Only)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:20:43</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-009</strong></td>
+            <td>Non-Critical Typo in Error Response</td>
+            <td><code>Output 2 (Airtable Only)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:21:13</td>
+            <td>Webhook triggered successfully</td>
+        </tr>        <tr>
+            <td><strong>TC-010</strong></td>
+            <td>CSS Animation Loading Order</td>
+            <td><code>Output 2 (Airtable Only)</code></td>
+            <td><span class="badge badge-success">ACCEPTED</span></td>
+            <td>2026-10-06 21:21:43</td>
+            <td>Webhook triggered successfully</td>
+        </tr>
+            </tbody>
+        </table>
+
+        <div class="footer">
+            Generated on 2026-10-06 21:21:43 | Volta Coffee Roasters QE Automation Pipeline
+        </div>
+    </div>
+</body>
+</html>

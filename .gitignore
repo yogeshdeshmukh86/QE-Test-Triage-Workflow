@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+credentials*.json
+*.log
+.DS_Store
+Thumbs.db
+QE_Test_Triage_Report.html

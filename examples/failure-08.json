@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1008",
+  "environment": "DEMO-DEV-QA",
+  "application": "Volta Analytics Pipeline",
+  "test_case_id": "TC-ANALYTICS-005",
+  "test_name": "Track_Page_View_Event",
+  "execution_status": "FAILED",
+  "execution_time_ms": 3100,
+  "error_type": "NetworkTimeoutException",
+  "error_message": "Minor analytics ping failed to respond within 3000ms limit.",
+  "stack_trace": "NetworkTimeoutException: Request timed out"
+}

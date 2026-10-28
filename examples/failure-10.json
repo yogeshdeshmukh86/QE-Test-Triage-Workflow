@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1010",
+  "environment": "DEMO-DEV-QA",
+  "application": "Volta Web Storefront",
+  "test_case_id": "TC-UI-089",
+  "test_name": "Hero_Banner_Fade_In_Animation",
+  "execution_status": "FAILED",
+  "execution_time_ms": 1150,
+  "error_type": "VisualRegressionException",
+  "error_message": "Visual diff ratio 0.02% exceeds 0.00% threshold on hero banner animation frame.",
+  "stack_trace": "VisualRegressionException: Frame visual snapshot mismatch"
+}

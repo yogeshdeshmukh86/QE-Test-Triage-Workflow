@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1001",
+  "environment": "DEMO-STAGING",
+  "application": "Volta Web Storefront",
+  "test_case_id": "TC-CRASH-001",
+  "test_name": "Checkout_JVM_Fatal_OutOfMemoryError",
+  "execution_status": "FAILED",
+  "execution_time_ms": 1250,
+  "error_type": "java.lang.OutOfMemoryError",
+  "error_message": "FATAL: Java heap space exhausted in CheckoutService. Service crashed and container restarted unexpectedly.",
+  "stack_trace": "java.lang.OutOfMemoryError: Java heap space\n\tat com.volta.checkout.OrderProcessor.allocateBuffer(OrderProcessor.java:214)"
+}

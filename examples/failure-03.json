@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1003",
+  "environment": "DEMO-QA",
+  "application": "Volta Order API",
+  "test_case_id": "TC-DB-009",
+  "test_name": "Postgres_ConnectionPool_Exhausted",
+  "execution_status": "FAILED",
+  "execution_time_ms": 15400,
+  "error_type": "SQLException",
+  "error_message": "FATAL: Cannot obtain database connection. Synthetic demo connection pool exhausted.",
+  "stack_trace": "org.postgresql.util.PSQLException: FATAL: connection limit exceeded in synthetic demo database"
+}

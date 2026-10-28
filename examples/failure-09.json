@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1009",
+  "environment": "DEMO-DEV-QA",
+  "application": "Volta Search API",
+  "test_case_id": "TC-SEARCH-011",
+  "test_name": "Search_Invalid_Query_Validation",
+  "execution_status": "FAILED",
+  "execution_time_ms": 420,
+  "error_type": "AssertionError",
+  "error_message": "Expected error message 'Invalid search term', got 'Invalid Search Term'",
+  "stack_trace": "AssertionError: Expected 'Invalid search term' but got 'Invalid Search Term'"
+}

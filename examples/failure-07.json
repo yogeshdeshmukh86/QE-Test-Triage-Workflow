@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1007",
+  "environment": "DEMO-DEV-QA",
+  "application": "Volta Web Storefront",
+  "test_case_id": "TC-UI-002",
+  "test_name": "Verify_Footer_Copyright_Year",
+  "execution_status": "FAILED",
+  "execution_time_ms": 890,
+  "error_type": "ElementMismatchError",
+  "error_message": "Expected footer element text '© 2026 Volta Roasters', but found '© 2025 Volta Roasters'",
+  "stack_trace": "ElementMismatchError: Text mismatch at xpath '//footer/p[1]'"
+}

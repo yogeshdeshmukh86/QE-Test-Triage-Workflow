@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1004",
+  "environment": "DEMO-STAGING",
+  "application": "Volta Web Storefront",
+  "test_case_id": "TC-PROMO-008",
+  "test_name": "Apply_Seasonal_Coupon_AUTUMN-ROAST",
+  "execution_status": "FAILED",
+  "execution_time_ms": 2410,
+  "error_type": "AssertionError",
+  "error_message": "Expected cart total to be '34.00 EUR' after 15% discount, but received '40.00 EUR'",
+  "stack_trace": "AssertionError: Expected '34.00 EUR' but got '40.00 EUR'\n\tat com.volta.tests.web.CartTest.verifyPromoDiscount(CartTest.java:94)"
+}

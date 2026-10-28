@@ -1,0 +1,787 @@
+{
+  "name": "QE - Test Failure Triage Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "qe-test-triage",
+        "options": {
+          "responseCode": {
+            "values": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        -32
+      ],
+      "id": "19f409ed-ddb7-4bf8-a77f-8a399f14721c",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d81cf940-7f4a-470d-99be-c6d6404d3320",
+              "name": "test_run_id",
+              "value": "={{ $json.body.test_run_id }}",
+              "type": "string"
+            },
+            {
+              "id": "eb364608-01c5-42cb-98da-7112d5dc1317",
+              "name": "environment",
+              "value": "={{ $json.body.environment }}",
+              "type": "string"
+            },
+            {
+              "id": "f33c442d-200c-498a-8a74-c5afdbe486d5",
+              "name": "application",
+              "value": "={{ $json.body.application }}",
+              "type": "string"
+            },
+            {
+              "id": "de947136-a7cd-435b-b6de-5d20427139b9",
+              "name": "test_case_id",
+              "value": "={{ $json.body.test_case_id }}",
+              "type": "string"
+            },
+            {
+              "id": "65b3b318-84ee-4e11-97ab-71561eec60fe",
+              "name": "test_name",
+              "value": "={{ $json.body.test_name }}",
+              "type": "string"
+            },
+            {
+              "id": "f83ddfbe-d237-4c26-82b6-ae61ee835a57",
+              "name": "execution_status",
+              "value": "={{ $json.body.execution_status }}",
+              "type": "string"
+            },
+            {
+              "id": "0b42c77d-a463-4f6b-af57-70c8163d4ced",
+              "name": "error_type",
+              "value": "={{ $json.body.error_type }}",
+              "type": "string"
+            },
+            {
+              "id": "ee479306-13bc-46b5-afb1-6869495ba7a4",
+              "name": "error_message",
+              "value": "={{ $json.body.error_message }}",
+              "type": "string"
+            },
+            {
+              "id": "a17a31a1-358b-40df-a449-85c923340493",
+              "name": "stack_trace",
+              "value": "={{ $json.body.stack_trace }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -144,
+        -32
+      ],
+      "id": "af9775c2-42a1-4305-adee-3b907656aa56",
+      "name": "Prepare"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a Quality Engineering Log Analyzer. Your sole job is to inspect automated test execution details and extract clear technical metadata and root-cause summaries.\n\nInstructions:\n1. Extract the primary failing component and class/method from the stack trace.\n2. Summarize the root cause in one concise, objective sentence describing what went wrong.\n3. Identify the failure domain (e.g., Payment Gateway, Pricing/Cart Logic, UI Selector Timeout, Database, Auth).\n4. Do NOT make any decisions about priority, severity, or ticketing actions.\n\nOutput ONLY valid JSON adhering to the requested schema.\nTest Case ID: {{ $json.test_case_id }}\nTest Name: {{ $json.test_name }}\nApplication: {{ $json.application }}\nEnvironment: {{ $json.environment }}\nError Type: {{ $json.error_type }}\nError Message: {{ $json.error_message }}\nStack Trace: {{ $json.stack_trace }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        80,
+        -32
+      ],
+      "id": "0ccc4dc6-58fe-4649-a13b-428b92e06523",
+      "name": "Extract"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Lead Quality Assurance & Site Reliability Specialist. Your job is to classify the priority and severity of a test failure based on extracted root-cause metadata.\n\nSTRICT CLASSIFICATION RULES:\n\n1. HIGH SEVERITY / HIGH PRIORITY:\n   - System crashes, unhandled exceptions (e.g., NullPointerException, PaymentGatewayException), 5xx API errors, or payment/checkout blockers.\n\n2. MEDIUM SEVERITY / MEDIUM PRIORITY:\n   - Functional and business logic failures where the app completes execution without crashing, but output validation fails (e.g., AssertionError, incorrect cart totals, promo code calculation mismatches).\n\n3. LOW SEVERITY / LOW PRIORITY:\n   - Infrastructure slowdowns, network timeouts (e.g., TimeoutException), element wait delays, or flaky UI selectors.\n\nINPUT DATA TO CLASSIFY:\nTest Case ID: {{ $json.output.test_case_id }}\nError Type: {{ $('Prepare').item.json.error_type }}\nFailing Component: {{ $json.output.failing_component }}\nFailure Domain: {{ $json.output.failure_domain }}\nExtracted Root Cause: {{ $json.output.extracted_root_cause }}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "876dc1a9-c476-4cd7-98f4-2d5d04855813",
+      "name": "Classify"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"test_case_id\": { \"type\": \"string\" },\n    \"failing_component\": { \n      \"type\": \"string\",\n      \"description\": \"Component or service that failed (e.g., Mobile Checkout, Cart Engine, Store Finder UI)\"\n    },\n    \"failure_domain\": { \n      \"type\": \"string\",\n      \"description\": \"Domain category (e.g., Payment Gateway, Pricing Logic, Infrastructure/Timeout)\"\n    },\n    \"extracted_root_cause\": { \n      \"type\": \"string\",\n      \"description\": \"One concise sentence explaining the exact technical failure from the stack trace.\"\n    }\n  },\n  \"required\": [\"test_case_id\", \"failing_component\", \"failure_domain\", \"extracted_root_cause\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        192
+      ],
+      "id": "93b8d8d0-f207-4f7d-b742-d4b3027b1bc9",
+      "name": "Structured Output Parser- Extract"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -224
+      ],
+      "id": "4de04f31-ecf6-46a7-b708-e1a8b6481bc6",
+      "name": "OpenRouter Chat Model Classify"
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -224
+      ],
+      "id": "9e7d2194-8da2-4716-b7ef-cfc801b85dcd",
+      "name": "OpenRouter Chat Model Extract"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"priority\": {\n      \"type\": \"string\",\n      \"enum\": [\"High\", \"Medium\", \"Low\"],\n      \"description\": \"Priority level based on strict classification rules.\"\n    },\n    \"severity\": {\n      \"type\": \"string\",\n      \"enum\": [\"High\", \"Medium\", \"Low\"],\n      \"description\": \"Severity level based on error impact.\"\n    },\n    \"bug_title\": {\n      \"type\": \"string\",\n      \"description\": \"Concise summary line for ticket creation or alerts.\"\n    },\n    \"recommended_action\": {\n      \"type\": \"string\",\n      \"description\": \"Specific triage recommendation for engineering.\"\n    },\n    \"is_flaky\": {\n      \"type\": \"boolean\",\n      \"description\": \"True if the failure is due to a timeout or flaky selector.\"\n    }\n  },\n  \"required\": [\"priority\", \"severity\", \"bug_title\", \"recommended_action\", \"is_flaky\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        512,
+        144
+      ],
+      "id": "94c1e907-2d40-42ad-904c-9223b34773c9",
+      "name": "Structured Output Parser Classify"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#your-qe-triage-channel",
+          "mode": "name"
+        },
+        "text": "=🚨 *AUTOMATED TEST TRIAGE ALERT* 🚨\n\n*Test Case:* {{ $('Prepare').item.json.test_case_id }} — {{$('Prepare').item.json.test_name }}\n*Application:* {{ $('Prepare').item.json.application }} (`{{ $('Prepare').item.json.environment }}`)\n*Bug Title:* {{ $json.output.bug_title }}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📊 *Triage Details:*\n• *Priority:* {{ $json.output.priority }} ⚠️\n• *Severity:* {{ $json.output.severity }} ⚡\n• *Failing Component:* {{ $('Extract').item.json.output.failing_component }}\n• *Failure Domain:* {{ $('Extract').item.json.output.failure_domain }}\n\n🔍 *Root Cause Analysis:*\n> {{ $('Extract').item.json.output.extracted_root_cause }}\n\n💡 *Recommended Action:*\n{{ $json.output.recommended_action }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        1072,
+        -32
+      ],
+      "id": "f050c52e-dfa3-4d05-bc35-bf36c4a90422",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "REPLACE_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "REPLACE_AIRTABLE_TABLE_ID",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Is Flaky": "={{ $('Classify').item.json.output.is_flaky }}",
+            "Test Case ID": "={{ $('Extract').item.json.output.test_case_id }}",
+            "Priority": "={{ $('Classify').item.json.output.priority }}",
+            "Severity": "={{ $('Classify').item.json.output.severity }}",
+            "Bug Title": "={{ $json.output.bug_title }}",
+            "Failing Component": "={{ $('Extract').item.json.output.failing_component }}",
+            "Failure Domain": "={{ $('Extract').item.json.output.failure_domain }}",
+            "Extracted Root Cause": "={{ $('Extract').item.json.output.extracted_root_cause }}",
+            "Environment": "={{ $('Prepare').item.json.environment }}",
+            "Recommended Action": "={{ $('Classify').item.json.output.recommended_action }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Test Case ID",
+              "displayName": "Test Case ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Bug Title",
+              "displayName": "Bug Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Failing Component",
+              "displayName": "Failing Component",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Failure Domain",
+              "displayName": "Failure Domain",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracted Root Cause",
+              "displayName": "Extracted Root Cause",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Action",
+              "displayName": "Recommended Action",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Is Flaky",
+              "displayName": "Is Flaky",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Triage Timestamp",
+              "displayName": "Triage Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1248,
+        -32
+      ],
+      "id": "de5d881e-9e4d-4723-9b48-bffb2294ac6a",
+      "name": "Create a record"
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 3,
+        "output": "={{ $json.output.priority === 'High' || $json.output.severity === 'High' ? 0 : ($json.output.priority === 'Medium' || $json.output.severity === 'Medium' ? 1 : 2) }}"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        -48
+      ],
+      "id": "a77b6a98-e16c-4331-8281-5bcfa67c4f54",
+      "name": "Switch Route by Priority _Severity"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "REPLACE_AIRTABLE_BASE_ID",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "REPLACE_AIRTABLE_TABLE_ID",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Is Flaky": "={{ $('Classify').item.json.output.is_flaky }}",
+            "Test Case ID": "={{ $('Extract').item.json.output.test_case_id }}",
+            "Priority": "={{ $('Classify').item.json.output.priority }}",
+            "Severity": "={{ $('Classify').item.json.output.severity }}",
+            "Bug Title": "={{ $json.output.bug_title }}",
+            "Failing Component": "={{ $('Extract').item.json.output.failing_component }}",
+            "Failure Domain": "={{ $('Extract').item.json.output.failure_domain }}",
+            "Extracted Root Cause": "={{ $('Extract').item.json.output.extracted_root_cause }}",
+            "Environment": "={{ $('Prepare').item.json.environment }}",
+            "Recommended Action": "={{ $('Classify').item.json.output.recommended_action }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Test Case ID",
+              "displayName": "Test Case ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Bug Title",
+              "displayName": "Bug Title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Failing Component",
+              "displayName": "Failing Component",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Failure Domain",
+              "displayName": "Failure Domain",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Extracted Root Cause",
+              "displayName": "Extracted Root Cause",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Recommended Action",
+              "displayName": "Recommended Action",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Is Flaky",
+              "displayName": "Is Flaky",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Triage Timestamp",
+              "displayName": "Triage Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        224
+      ],
+      "id": "1b7dba70-cb62-4bb7-b24e-42be4e934f95",
+      "name": "Records for Low  Priortiy_severity"
+    },
+    {
+      "parameters": {
+        "project": {
+          "__rl": true,
+          "value": "REPLACE_JIRA_PROJECT_ID",
+          "mode": "id"
+        },
+        "issueType": {
+          "__rl": true,
+          "value": "REPLACE_JIRA_ISSUE_TYPE_ID",
+          "mode": "id"
+        },
+        "summary": "=🚨 [QE Alert] Bug: {{ $json.output.bug_title }}",
+        "additionalFields": {
+          "description": "=h2. 🚨 Automated QE Test Failure Report  * *Test Case ID:* {{ $('Prepare').item.json.test_case_id }} * *Test Name:* {{ $('Prepare').item.json.test_name }} * *Environment:* {{ $('Prepare').item.json.environment }} * *Priority:* {{ $json.output.priority }} * *Severity:* {{ $json.output.severity }}  h3. 🔍 Component & Domain * *Failing Component:* {{ $('Extract').item.json.output.failing_component }} * *Failure Domain:* {{ $('Extract').item.json.output.failure_domain }}  h3. 💡 Recommended Action {{ $json.output.recommended_action }}  h3. 📜 Root Cause {{ $('Extract').item.json.output.extracted_root_cause }}",
+          "customFieldsUi": {
+            "customFieldsValues": []
+          },
+          "priority": {
+            "__rl": true,
+            "value": "REPLACE_JIRA_PRIORITY_ID",
+            "mode": "id"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.jira",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -224
+      ],
+      "id": "308746ca-9010-4a77-84e7-a1d9574c203c",
+      "name": "Create an issue"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare": {
+      "main": [
+        [
+          {
+            "node": "Extract",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract": {
+      "main": [
+        [
+          {
+            "node": "Classify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser- Extract": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Extract",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model Classify": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classify",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model Extract": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser Classify": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Classify",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify": {
+      "main": [
+        [
+          {
+            "node": "Switch Route by Priority _Severity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Route by Priority _Severity": {
+      "main": [
+        [
+          {
+            "node": "Create an issue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Records for Low  Priortiy_severity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "nodeGroups": [],
+  "tags": [
+    {
+      "updatedAt": "2026-10-05T06:53:38.554Z",
+      "createdAt": "2026-10-05T06:53:38.554Z",
+      "id": "JXBfpK73s0AMSPf4",
+      "name": "AI Automation Training"
+    },
+    {
+      "updatedAt": "2026-10-06T13:12:44.793Z",
+      "createdAt": "2026-10-06T13:12:44.793Z",
+      "id": "W1RuiEShiNp7BZOR",
+      "name": "QA- AI Triage"
+    }
+  ]
+}

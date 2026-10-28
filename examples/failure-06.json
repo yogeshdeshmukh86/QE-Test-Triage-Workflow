@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1006",
+  "environment": "DEMO-DEV-QA",
+  "application": "Volta Customer Portal",
+  "test_case_id": "TC-USER-014",
+  "test_name": "Upload_Profile_Avatar_JPEG",
+  "execution_status": "FAILED",
+  "execution_time_ms": 1800,
+  "error_type": "MaxUploadSizeExceededException",
+  "error_message": "Maximum upload size of 5MB exceeded for user avatar.",
+  "stack_trace": "org.springframework.web.multipart.MaxUploadSizeExceededException: Maximum upload size exceeded"
+}

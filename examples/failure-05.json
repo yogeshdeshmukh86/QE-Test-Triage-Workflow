@@ -1,0 +1,12 @@
+{
+  "test_run_id": "TR-VOLTA-2026-1005",
+  "environment": "DEMO-STAGING",
+  "application": "Volta Notification Worker",
+  "test_case_id": "TC-NOTIF-003",
+  "test_name": "Send_Order_Confirmation_Email",
+  "execution_status": "FAILED",
+  "execution_time_ms": 5200,
+  "error_type": "SMTPConnectException",
+  "error_message": "Could not connect to SMTP host: smtp.example.invalid (synthetic demo host): simulated service unavailable",
+  "stack_trace": "com.sun.mail.util.MailConnectException: Couldn't connect to host"
+}
