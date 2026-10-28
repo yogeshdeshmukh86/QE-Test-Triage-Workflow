@@ -19,12 +19,11 @@ The same automation approach could also be implemented with **Zapier, Make, or s
 ## Demo context and account disclosure
 
 - This is an independent portfolio demonstration using simulated test failures, not a client delivery or production deployment.
-- **Contigo is a dummy company in the supplied materials.** Its customer-support prompts belong to a separate scenario and are not part of the QE workflow.
 - The QE examples and presentation use **Volta / Volta Coffee Roasters as the demonstration application context**. Those names do not imply an employment, client, or endorsement relationship.
 - Airtable and Jira were configured using my personal trial accounts. The Slack channel belongs to me.
 - The public workflow removes credential references, account-specific resource IDs, pinned data, and instance metadata. Configure your own credentials and destinations before running it.
 
-All example payloads use synthetic demonstration environment labels. Database errors and stack traces are illustrative fixtures, not operational logs.
+All payload files and sample data are provided for demonstration purposes only. Use their JSON structure as a reference to create payloads relevant to your own application and testing scenarios. If you change field names or the payload schema, update the n8n field mappings, prompts, and output schemas where affected. Database errors and stack traces are illustrative fixtures, not operational logs.
 
 ## Workflow overview
 
