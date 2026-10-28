@@ -147,6 +147,17 @@ The current project runs locally in Docker. Future work includes:
 
 See the [cloud architecture and scaling roadmap](docs/cloud-scaling-roadmap.md) for the serverless diagram, component responsibilities, and phased implementation plan.
 
+## Feedback and contributions
+
+Working on software testing, QE, or workflow automation? Help develop this idea further.
+
+- **Fork the repository** to experiment with your own synthetic test scenarios and integrations.
+- **Open an issue** to suggest a use case, report a problem, or challenge a classification rule.
+- **Submit a pull request** with a focused improvement and details of how you verified it.
+- **Star the repository** if you find it useful and want to find it again.
+
+Contributions around CI integration, duplicate detection, classification evaluation, reliable delivery, and cloud scaling are especially welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the process.
+
 ## Author
 
 [Yogesh Deshmukh](https://github.com/yogeshdeshmukh86) . Quality Engineering and Test Management
