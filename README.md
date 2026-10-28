@@ -39,6 +39,12 @@ The recording should demonstrate actual destination results alongside n8n execut
 
 All example payloads use synthetic demonstration environment labels. Database errors and stack traces are illustrative fixtures, not operational logs.
 
+## Workflow overview
+
+![Current n8n test failure triage workflow](assets/n8n-workflow-overview.png)
+
+The screenshot shows the current implementation: webhook intake, field preparation, AI extraction and classification with structured parsers, then three severity-based routes. The simplified diagram below shows the same flow.
+
 ## What the workflow does
 
 1. Receives a JSON test failure through an HTTP POST webhook.
@@ -87,6 +93,7 @@ flowchart TD
 | [Workflow JSON](workflows/qe-test-failure-triage.json) | Sanitized importable n8n definition |
 | [Setup guide](docs/setup.md) | Credentials, destination configuration, and execution |
 | [Architecture](docs/architecture.md) | AI boundaries, schemas, and implementation details |
+| [Cloud scaling roadmap](docs/cloud-scaling-roadmap.md) | Proposed serverless architecture and future enhancements |
 | [Validation notes](docs/validation.md) | Actual report findings and known limitations |
 | [Examples](examples/) | Ten standalone JSON failure payloads |
 | [PowerShell runner](scripts/runtests.ps1) | Batch webhook submission and HTML report generation |
@@ -125,13 +132,20 @@ The models suggest a probable root cause and classification. Structured JSON val
 
 The original presentation mentions sub-two-second Jira creation and full auditability. The supplied evidence does not establish those claims. See [validation notes](docs/validation.md) before quoting results.
 
-## Next steps
+## Further scope and scaling roadmap
 
-- Complete high-priority fan-out and log all branches consistently.
-- Measure classification against human-labelled failures and resolve prompt conflicts.
-- Add schema validation at intake, authentication, safe handling of untrusted log text, retries, and failure fallback.
-- Add duplicate detection and idempotency before connecting a CI runner.
-- Capture downstream assertions and execution timing, then evaluate a larger sample.
+The current project runs locally in Docker. Future work includes:
+
+- **Reliable triage:** complete High fan-out, log every outcome, add deduplication, retries, and independent delivery to each destination.
+- **Better testing decisions:** evaluate human-labelled failures, resolve classification conflicts, track flakiness across runs, and capture human feedback.
+- **CI/CD integration:** receive failure events from automated test runners using validated payloads and stable event IDs.
+- **Scalable n8n hosting:** use queue mode with Redis, PostgreSQL, and additional workers on managed container infrastructure.
+- **Cloud serverless alternative:** rebuild the processing logic as authenticated API intake, a durable queue, serverless functions, persistent state, and independent delivery workers.
+- **Operational readiness:** add monitoring, dead-letter handling, secure secret storage, retention policies, cost controls, and load testing.
+
+**The cloud architecture is proposed future work, not an implemented deployment.** The serverless path requires a rebuild; the n8n JSON is not directly deployable as a cloud function.
+
+See the [cloud architecture and scaling roadmap](docs/cloud-scaling-roadmap.md) for the serverless diagram, component responsibilities, and phased implementation plan.
 
 ## Author
 
