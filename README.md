@@ -1,6 +1,6 @@
 # Automated QE Test Failure Triage Workflow
 
-**An n8n portfolio project by Yogesh Deshmukh that applies AI-assisted triage to a real software testing problem: deciding which automated test failures need attention and where to route them.**
+**An n8n portfolio project  applies AI-assisted triage to a real software testing problem: deciding which automated test failures need attention and where to route them.**
 
 ## Purpose and intent
 
