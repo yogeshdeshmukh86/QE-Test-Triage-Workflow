@@ -30,6 +30,10 @@ Use an n8n instance supporting the exported node types, PowerShell for the optio
 
 ## Payload contract
 
+The files in `examples/` contain synthetic demonstration payloads. Use their field names and JSON structure as a reference, then create your own payloads relevant to your application, test framework, and failure scenarios. The example structure is not a universal test-report standard.
+
+If your test runner uses a different schema, either transform its output into the reference structure before submission or update the Prepare mappings and any affected AI prompts, output schemas, and integration mappings. Verify the updated workflow with your own expected classifications and destination results.
+
 The Prepare node maps `test_run_id`, `environment`, `application`, `test_case_id`, `test_name`, `execution_status`, `error_type`, `error_message`, and `stack_trace` from the incoming request body. Examples also contain `execution_time_ms`, which the current Prepare node does not forward. Intake does not explicitly reject missing fields or filter passed tests. Submit failure payloads only until such validation is added.
 
 ## Webhook modes
