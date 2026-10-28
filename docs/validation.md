@@ -33,7 +33,7 @@ Removed credential bindings, pinned data, workflow/instance metadata, and node w
 
 The runner now accepts URL/report parameters, defaults to a production webhook path for batch execution, and names the current High route accurately. Its expected routes remain design expectations, not assertions. Sample report results were preserved.
 
-The live Airtable link was excluded. Contigo customer-support prompts were excluded because they describe a separate financial-services support scenario, not QE triage. Contigo is a dummy company, as declared by the author.
+The live Airtable link was excluded.
 
 ## Recommended evaluation
 
