@@ -158,6 +158,10 @@ Working on software testing, QE, or workflow automation? Help develop this idea 
 
 Contributions around CI integration, duplicate detection, classification evaluation, reliable delivery, and cloud scaling are especially welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the process.
 
+## License
+
+This project is licensed under the [MIT License](LICENSE). Third-party tools and services remain subject to their own licenses and terms.
+
 ## Author
 
 [Yogesh Deshmukh](https://github.com/yogeshdeshmukh86) . Quality Engineering and Test Management
