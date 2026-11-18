@@ -29,8 +29,6 @@ All payload files and sample data are provided for demonstration purposes only. 
 
 ![Animated overview of the n8n test failure triage workflow](assets/n8n-workflow-demo.gif)
 
-![Current n8n test failure triage workflow](assets/n8n-workflow-overview.png)
-
 The screenshot shows the current implementation: webhook intake, field preparation, AI extraction and classification with structured parsers, then three severity-based routes. The simplified diagram below shows the same flow.
 
 ## What the workflow does
